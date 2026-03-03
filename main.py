@@ -21,7 +21,7 @@ if not GEMINI_API_KEY:
     raise HTTPException(status_code=500, detail="Clé API Gemini manquante")
 
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('models/gemini-1.5-flash-latest')
 
 class MindMapRequest(BaseModel):
     course_title: str
