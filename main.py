@@ -33,11 +33,32 @@ class MindMapRequest(BaseModel):
 
 @app.post("/generate-mindmap/")
 async def create_mindmap(request: MindMapRequest):
-    prompt = f"""Génère une carte mentale au format Markdown pour le cours '{request.course_title}'.
-    Public: {request.target_audience}, Durée: {request.course_duration}, Concepts: {request.key_concepts}.
-    Utilise une hiérarchie avec des '#' (ex: # Titre, ## Module). 
-    Commence directement par le markdown sans balises ```."""
-    
+    prompt = f"""
+    As an expert educator and curriculum designer, create a comprehensive and well-structured mind map for the course titled '{request.course_title}'. The mind map should be tailored for a {request.course_duration} course and designed for {request.target_audience}.
+
+    Key details:
+    1. Course duration: {request.course_duration}
+    2. Target audience: {request.target_audience}
+    3. Key concepts, themes and central ideas: {request.key_concepts}
+    4. Desired level of detail: {request.granularity_level}
+    5. Learning objectives: {request.learning_objectives}
+
+    Guidelines for mind map creation:
+    1. Start with the course title as the central node.
+    2. Create main branches for major units or modules.
+    3. For each main branch, create sub-branches for topics within that unit.
+    4. Further break down topics into subtopics based on the desired level of detail ({request.granularity_level}).
+    5. Ensure that the content aligns with the specified course duration and is appropriate for the target audience.
+    6. Incorporate the key concepts and themes throughout the mind map.
+    7. Structure the content to support the achievement of the stated learning objectives.
+    8. Use concise, clear language for each node.
+    9. Maintain a logical flow and hierarchy in the mind map structure.
+    10. Aim for a balanced distribution of content across the main branches.
+
+    Present the mind map in Markdown format only, without additional explanations or text. Use proper indentation to represent the hierarchy. Do not use "```markdown" tags.
+
+    Ensure the mind map is comprehensive, accurate, and tailored to the specific course requirements provided. Only use the proper markdown format with hashes (#), etc. Don't use  "```" anywhere. Start with markdown directly without ```.
+    """
     try:
         response = model.generate_content(prompt)
         return {"markdown": response.text}
